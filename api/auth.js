@@ -17,6 +17,13 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
+app.options('*', (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.sendStatus(200);
+});
+
 app.post('/login', async (req, res) => {
   await dbConnect();
   try {
