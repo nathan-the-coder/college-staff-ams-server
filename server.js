@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -9,9 +10,14 @@ const Settings = require('./models/Settings');
 const JWT_SECRET = process.env.JWT_SECRET || 'staff-attendance-secret-key-2024';
 
 const app = express();
-const uri = "mongodb://nate_dev:Cx9ar20EjXBCPcgK@ac-nirte9t-shard-00-00.2xs8x7u.mongodb.net:27017,ac-nirte9t-shard-00-01.2xs8x7u.mongodb.net:27017,ac-nirte9t-shard-00-02.2xs8x7u.mongodb.net:27017/?ssl=true&replicaSet=atlas-10dx3g-shard-0&authSource=admin&appName=Cluster0";
+const uri = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/staff-attendance";
 
-app.use(cors());
+const corsOptions = {
+  origin: ['https://ams-sigma-snowy.vercel.app', 'http://localhost:5173'],
+  credentials: true
+};
+
+app.use(cors(corsOptions));
 app.use(express.json({ limit: '50mb' }));
 
 mongoose.connect(uri)
