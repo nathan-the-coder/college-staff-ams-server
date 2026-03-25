@@ -363,5 +363,35 @@ app.post('/api/seed', async (req, res) => {
   }
 });
 
+app.post('/api/admin/create', async (req, res) => {
+  try {
+    const { username, password, secret } = req.body;
+    
+    if (secret !== 'create-admin-2026') {
+      return res.status(401).json({ message: 'Invalid secret' });
+    }
+    
+    const existingAdmin = await User.findOne({ isAdmin: true });
+    if (existingAdmin) {
+      return res.status(400).json({ message: 'Admin already exists' });
+    }
+    
+    const admin = new User({
+      name: 'Administrator',
+      role: 'Admin',
+      username,
+      password,
+      isAdmin: true,
+      faceDescriptor: []
+    });
+    
+    await admin.save();
+    res.status(201).json({ message: 'Admin created successfully' });
+  } catch (error) {
+    console.error('Error creating admin:', error);
+    res.status(500).json({ message: 'Failed to create admin' });
+  }
+});
+
 const PORT = 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
